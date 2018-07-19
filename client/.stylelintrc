@@ -1,0 +1,18 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "block-closing-brace-newline-after": null,
+    "comment-empty-line-before": null,
+    "no-eol-whitespace": null,
+    "no-descending-specificity": null,
+    "rule-empty-line-before": null,
+    "declaration-empty-line-before": null,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global", "local", "export"]
+      }
+    ]
+  },
+  "ignoreFiles": "node_modules/**/*.css"
+}

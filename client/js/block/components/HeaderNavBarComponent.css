@@ -1,0 +1,13 @@
+:local(.navbarCollapse) {
+  padding-left: 0;
+}
+
+:local(.navbarBrand) {
+  height: 100%;
+}
+
+.header .container {
+  padding: 0;
+  width: 100%;
+  font-size: 13px;
+}

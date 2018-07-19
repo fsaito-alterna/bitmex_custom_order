@@ -1,0 +1,5 @@
+:local(.self) {
+  flex: 1 1 auto;
+  height: auto !important;
+  border: transparent solid;  /* for margin of content */
+}

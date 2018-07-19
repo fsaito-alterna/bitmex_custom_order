@@ -1,0 +1,151 @@
+/* --------------------------------------------------------
+* common
+*/
+/* stylelint-disable-next-line no-descending-specificity */
+
+html,
+body {
+  height: 100%;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+a {
+  &:hover,
+  &:focus,
+  &:active {
+    text-decoration: none;
+  }
+}
+
+.dropdown-menu .active a {
+  background-color: #0a2f68;
+
+  &:focus,
+  &:hover {
+    background-color: #0a2f68;
+  }
+}
+
+.main-menu-center {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 100px;
+  width: 600px;
+
+  & .main-menu-center-submit {
+    display: table;
+    margin: 0 auto;
+  }
+}
+
+.main-root-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.page-main {
+  display: flex;
+  flex-direction: row;
+  overflow: scroll;
+}
+
+/* --------------------------------------------------------
+* customize third party components
+*/
+
+.flash-error,
+.flash-info,
+.flash-notice,
+.redirection-wait {
+  display: none;
+}
+
+.flash-message-list-component-wrapper {
+  position: relative;
+  z-index: 10000;
+}
+
+.navbar {
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+.SearchableSelect-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 34px;
+  border-style: none;
+  color: transparent;
+  background-color: transparent;
+}
+
+.Select.is-disabled {
+  & .Select-placeholder {
+    cursor: not-allowed;
+  }
+
+  & .Select-value {
+    cursor: not-allowed;
+  }
+}
+
+.checkbox-inline {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.checkbox-inline + .checkbox-inline {
+  margin-left: 0;
+}
+
+.form-control[readonly] {
+  cursor: not-allowed;
+}
+
+input[type=checkbox][readonly]:checked {
+  background-color: red;
+}
+
+.CustomFieldSetField-contents {
+  padding-left: 16px;
+}
+
+/* --------------------------------------------------------
+* customize components
+*/
+
+.navbar-default {
+  background-color: #fff;
+  border-bottom: 1px solid #418ac3;
+
+  & .side-nav {
+    background-color: #125592;
+  }
+}
+
+.navbar-default .container {
+  padding: 0 15px;
+  margin: 0 0 0 auto;
+  width: 100%;
+}
+
+.navbar-brand {
+  padding-top: 8px;
+}
+
+.custom-edit-field {
+  margin-bottom: 8px;
+
+  & legend {
+    margin-bottom: 4px;
+  }
+}

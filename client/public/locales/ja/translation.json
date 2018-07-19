@@ -1,0 +1,19 @@
+{
+  "common": {
+  },
+  "CustomTable": {
+    "operation": "操作",
+    "checkboxColumnName": "選択"
+  },
+  "Orders": {
+    "sellOrders": "Sell Orders",
+    "buyOrders": "Buy Orders",
+    "orders": "Orders",
+    "price": "Price",
+    "nanj": "NANJ",
+    "btc": "BTC",
+    "doge": "DOGE",
+    "btc_orders": "BTC Orders",
+    "doge_orders": "DOGE Orders"
+  }
+}

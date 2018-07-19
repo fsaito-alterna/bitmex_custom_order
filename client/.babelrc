@@ -1,0 +1,23 @@
+{
+  "env": {
+    "production": {
+      "presets": ["es2015", "react", "stage-0"],
+      "plugins": [
+        "transform-runtime",
+        "transform-object-rest-spread",
+        ["transform-es2015-spread", { "loose": true }]
+      ]
+    },
+    "development": {
+      "presets": ["es2015", "react", "stage-0", "react-hmre"],
+      "plugins": [
+        "espower",
+        "transform-runtime",
+        "transform-object-rest-spread",
+        ["transform-es2015-spread", { "loose": true }],
+        "typecheck",
+        "rewire"
+      ]
+    }
+  }
+}

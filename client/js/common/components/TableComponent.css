@@ -1,0 +1,33 @@
+:local(.tableHeader) {
+  font-size: 13px;
+}
+
+:local(.sellTableHeader) {
+  font-size: 13px;
+  background: #d9534f;
+}
+
+:local(.buyTableHeader) {
+  font-size: 13px;
+  background: #5cb85c;
+}
+
+:local(.orderMarker) {
+  color: #828282;
+  font-size: 14px;
+  margin-left: 2px;
+
+  &.active {
+    color: #3476b6;
+  }
+
+  &.sub {
+    color: #499ad0;
+  }
+}
+
+:local(.column) {
+  &.inActive {
+    background-color: #828282;
+  }
+}

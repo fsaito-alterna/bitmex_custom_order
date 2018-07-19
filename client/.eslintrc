@@ -1,0 +1,117 @@
+{
+  "extends": [
+    "airbnb",
+    "eslint:recommended",
+    "plugin:flowtype/recommended"
+  ],
+  "parser": "babel-eslint",
+  "ecmaFeatures": {
+    "modules": true,
+    "spread" : true,
+    "restParams" : true
+  },
+  "env": {
+    "es6": true,
+    "jquery": true,
+    "mocha": true,
+    "node" : true,
+    "browser": true
+  },
+  "globals": {
+    "appConfig": true,
+    "USE_FREEZED_STORE": true,
+    "APP_KEY": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "plugins": [
+    "flowtype",
+    "react"
+  ],
+  "rules": {
+    "arrow-body-style": 0,
+    "class-methods-use-this": 0,
+    "flowtype/boolean-style": [2, "boolean"],
+    "func-names": 0,     // for callback function that don"t bind this
+    "id-length": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-named-as-default": 0,  // for unit test of react container
+    "import/prefer-default-export": 0,
+    "indent": [2, 2],
+    "jsx-a11y/no-static-element-interactions": 0,
+    "jsx-a11y/label-has-for": 0,
+    "linebreak-style": [2,"unix"],
+    "max-len": [2, 200, 4, {"ignoreUrls": true, "ignoreComments": true}],
+    "newline-per-chained-call": 0,
+    "no-alert": 0,
+    "no-bitwise": 0,
+    "no-case-declarations": 0,
+    "no-console": 0,     // for console.assert() and debugging
+    "no-debugger": 0,    // for debug function
+    "no-param-reassign": [2, {"props": false}],
+    "no-underscore-dangle": 0,  // _id of mongo document
+    "no-unused-vars": [2, {"vars": "all", "args": "none"}],
+    "object-curly-spacing": [2, "never"],
+    "prefer-arrow-callback": 2,
+    "quote-props": 0,
+    "react/no-danger": 0,
+    "react/forbid-prop-types": 0,
+    "react/jsx-filename-extension": [1, {"extensions": [".js"]}],
+    "react/jsx-no-bind": [2, {"allowArrowFunctions": true, "allowBind": true}],
+    "react/jsx-space-before-closing": 0,
+    "react/no-find-dom-node": 0,
+    "react/no-deprecated": 0,
+    "react/no-is-mounted": 0,
+    "react/no-multi-comp": 0,  // for private component in file scope
+    "react/no-unused-prop-types": 0,
+    "react/prefer-es6-class": 0,
+    "react/prefer-stateless-function": 0,
+    "space-before-function-paren": 0,
+    "react/require-extension": off, // surpress warning about airbnb
+    "react/require-default-props": 0,
+    "react/sort-comp": [2, {         // Some customized with https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/sort-comp.md
+      order: [
+        "lifecycle",
+        "eventHandler",
+        "other-private",
+        "everything-else",
+        "render"
+      ],
+      "groups": {
+        "lifecycle": [
+          "displayName",
+          "propTypes",
+          "contextTypes",
+          "childContextTypes",
+          "mixins",
+          "statics",
+          "defaultProps",
+          "constructor",
+          "getDefaultProps",
+          "getInitialState",
+          "getChildContext",
+          "componentWillMount",
+          "componentDidMount",
+          "componentWillReceiveProps",
+          "shouldComponentUpdate",
+          "componentWillUpdate",
+          "componentDidUpdate",
+          "componentWillUnmount"
+        ],
+        "other-private": [
+          "/^_(?!on|render).*$/",
+        ],
+        "eventHandler": [
+          "/^_on.+$/",     // private methods
+          "/^on.+$/"
+        ],
+        "render": [
+          "/^_render.+$/",  // private methods
+          "/^render.+$/",
+          "/^render$/"
+        ]
+      }
+    }]
+  }
+}

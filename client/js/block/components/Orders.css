@@ -1,0 +1,20 @@
+:local(.ordersArea) {
+  display: flex;
+  margin: 0.5em;
+}
+
+:local(.sellOrders) {
+  width: 50%;
+  margin-right: 0.4em;
+}
+
+:local(.buyOrders) {
+  margin-left: 0.4em;
+  width: 50%;
+}
+
+:local(.titleArea) {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5em;
+}
