@@ -2,18 +2,8 @@
 
 const ccxt = require('ccxt');
 
-const testdata = {
-  apiKey: 'GDEd5f1DcDzvUOX3q_uI7ecF',
-  secret: '2AyG3wLTAnOW5siuDo0aE-A4RCw5YZ8eS85cER3VaRbIMit-',
-  price: 6549.0,
-  amount: 1,
-  side: 'buy',
-  lossLimit: 5,
-  profitLimit: 10,
-};
-
-const handler = async (event) => {
-// exports.handler = async (event) => {
+//const handler = async (event) => {
+exports.handler = async (event) => {
   //console.log(event);
   
   const exchange = new ccxt.bitmex({
@@ -72,5 +62,3 @@ const createOutOrder = async (exchange, outProfitOrder, outLossOrder) => {
 	await exchange.createOrder(outProfitOrder.symbol, outProfitOrder.orderType, outProfitOrder.side, outProfitOrder.amount, outProfitOrder.price, outProfitOrder.params);
 	return await exchange.createOrder(outLossOrder.symbol, outLossOrder.orderType, outLossOrder.side, outLossOrder.amount, outLossOrder.price, outLossOrder.params);
 };
-
-handler(testdata);
