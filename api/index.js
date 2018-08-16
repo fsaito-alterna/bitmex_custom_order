@@ -2,7 +2,18 @@
 
 const ccxt = require('ccxt');
 
-//const handler = async (event) => {
+const testdata = {
+  apiKey: '',
+  secret: '',
+  price: 6436.0,
+  amount: 1,
+  side: 'sell',
+  orderType: 'market',
+  lossLimit: 5,
+  profitLimit: 10,
+};
+
+// const handler = async (event) => {
 exports.handler = async (event) => {
   //console.log(event);
   
@@ -12,24 +23,31 @@ exports.handler = async (event) => {
     enableRateLimit: true,
   });
 
-  const inOrder = {
+  let inOrder = {
     symbol: 'BTC/USD',
     orderType: event.orderType,
     side: event.side,
     amount: event.amount,
-    price: event.price,
     params: {
       clOrdLinkID: 'in',
       contingencyType: 'OneTriggersTheOther',
     },
   };
 
+  if (event.orderType === 'limit') {
+    inOrder.price = event.price;
+    inOrder.params.execInst = 'ParticipateDoNotInitiate';
+  }
+
+  const inres = await createInOrder(exchange,  inOrder);
+  console.log(inres);
+
   const outProfitOrder = {
     symbol: inOrder.symbol,
     orderType: 'limit',
     side: inOrder.side === 'buy' ? 'sell' : 'buy',
     amount: inOrder.amount,
-    price: inOrder.side === 'buy' ? inOrder.price + event.profitLimit : inOrder.price - event.profitLimit,
+    price: inOrder.side === 'buy' ? inres.price + event.profitLimit : inres.price - event.profitLimit,
     params: {
       clOrdLinkID: 'in',
       contingencyType: 'OneCancelsTheOther',
@@ -44,13 +62,12 @@ exports.handler = async (event) => {
     amount: inOrder.amount,
     params: {
       clOrdLinkID: 'in',
-      stopPx: inOrder.side === 'buy' ? inOrder.price - event.lossLimit : inOrder.price + event.lossLimit,
+      stopPx: inOrder.side === 'buy' ? inres.price - event.lossLimit : inres.price + event.lossLimit,
       contingencyType: 'OneCancelsTheOther',
       execInst: 'LastPrice',
     },
   }
 
-  const inres = await createInOrder(exchange,  inOrder);
   const outres = await createOutOrder(exchange, outProfitOrder, outLossOrder);
 };
 
@@ -62,3 +79,5 @@ const createOutOrder = async (exchange, outProfitOrder, outLossOrder) => {
 	await exchange.createOrder(outProfitOrder.symbol, outProfitOrder.orderType, outProfitOrder.side, outProfitOrder.amount, outProfitOrder.price, outProfitOrder.params);
 	return await exchange.createOrder(outLossOrder.symbol, outLossOrder.orderType, outLossOrder.side, outLossOrder.amount, outLossOrder.price, outLossOrder.params);
 };
+
+// handler(testdata);
