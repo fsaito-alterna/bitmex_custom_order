@@ -14,7 +14,7 @@ exports.handler = async (event) => {
 
   const inOrder = {
     symbol: 'BTC/USD',
-    orderType: 'limit',
+    orderType: event.orderType,
     side: event.side,
     amount: event.amount,
     price: event.price,
@@ -46,7 +46,7 @@ exports.handler = async (event) => {
       clOrdLinkID: 'in',
       stopPx: inOrder.side === 'buy' ? inOrder.price - event.lossLimit : inOrder.price + event.lossLimit,
       contingencyType: 'OneCancelsTheOther',
-      execInst: 'ReduceOnly',
+      execInst: 'LastPrice',
     },
   }
 
