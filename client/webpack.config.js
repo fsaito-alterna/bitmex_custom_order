@@ -22,6 +22,7 @@ module.exports = {
       'react-bootstrap',
       'react-dom',
       'react-dropzone',
+      'react-notification-system',
       'react-redux',
       'react-router',
       'react-select',
@@ -97,4 +98,5 @@ module.exports = {
     },
     contentBase: 'public',
   },
+  devtool: 'cheap-module-eval-source-map'
 }

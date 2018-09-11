@@ -5,8 +5,7 @@ import {Provider} from 'react-redux';
 import {Router, Route, hashHistory, Redirect} from 'react-router';
 
 import CERootPageInnerContainer from './CERootPageInnerContainer';
-import BTCOrdersTableContainer from './BTCOrdersTableContainer';
-import DogeOrdersTableContainer from './DogeOrdersTableContainer';
+import BitmexOrderContainer from './BitmexOrderContainer';
 
 class CERootPageContainer extends Component {
   static run({store, done}: {store: Object, done: Function}) {
@@ -15,9 +14,8 @@ class CERootPageContainer extends Component {
         <Provider store={store}>
           <Router history={hashHistory}>
             <Route component={CERootPageInnerContainer}>
-              <Redirect from="/" to="btc_orders" />
-              <Route path="/btc_orders" component={BTCOrdersTableContainer} />
-              <Route path="/doge_orders" component={DogeOrdersTableContainer} />
+              <Redirect from="/" to="bitmex_order" />
+              <Route path="/bitmex_order" component={BitmexOrderContainer} />
             </Route>
           </Router>
         </Provider>,

@@ -28,7 +28,7 @@ class CustomNumberEditField extends React.Component {
     return CustomFieldUtil.genericShouldComponentUpdate(this.props, this.state, nextProps, nextState);
   }
 
-  _onChange(e) {
+  _onChange = (e) => {
     const rawValue = e.target.value;
     let value;
     if (rawValue === '') {

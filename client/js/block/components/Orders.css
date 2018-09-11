@@ -1,20 +1,15 @@
-:local(.ordersArea) {
-  display: flex;
-  margin: 0.5em;
+:local(.panelArea) {
+  padding: 10px;
 }
 
-:local(.sellOrders) {
-  width: 50%;
-  margin-right: 0.4em;
+:local(.settingArea) {
+  width: 290px;
 }
 
-:local(.buyOrders) {
-  margin-left: 0.4em;
-  width: 50%;
+:local(.buttonArea) {
+  margin: 8px 0;
 }
 
-:local(.titleArea) {
-  display: flex;
-  justify-content: space-between;
-  margin: 0.5em;
+:local(.button) {
+  width: 140px;
 }

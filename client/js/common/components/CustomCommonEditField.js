@@ -28,7 +28,7 @@ class CustomCommonEditField extends React.Component {
     return CustomFieldUtil.genericShouldComponentUpdate(this.props, this.state, nextProps, nextState);
   }
 
-  _onChange(e) {
+  _onChange = (e) => {
     const rawValue = e.target.value;
     const value = rawValue === '' ? undefined : rawValue;
     const validity = this.getValidity();

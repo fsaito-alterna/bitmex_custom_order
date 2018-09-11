@@ -21,19 +21,12 @@ class CERootPageInnerContainer extends Component {
     router: PropTypes.object.isRequired,
   }
 
-  componentDidMount() {
-    this._retrieve();
-  }
-
-  _retrieve() {
-  }
-
   _getMenuItems(): Array<Object> {
     return _.map(this.constructor.menuItems, ({id, enabled, type}) => {
       return {
         id,
         enabled,
-        title: t(`Orders.${id}`),
+        title: t(`Menu.${id}`),
         basePath: `/${id}`,
         type,
       };
@@ -42,11 +35,7 @@ class CERootPageInnerContainer extends Component {
 
   static menuItems = [
     {
-      id: 'btc_orders',
-      enabled: true,
-    },
-    {
-      id: 'doge_orders',
+      id: 'bitmex_order',
       enabled: true,
     },
   ];

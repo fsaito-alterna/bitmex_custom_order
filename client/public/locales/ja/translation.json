@@ -1,19 +1,31 @@
 {
   "common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "edit": "編集"
   },
   "CustomTable": {
     "operation": "操作",
     "checkboxColumnName": "選択"
   },
-  "Orders": {
-    "sellOrders": "Sell Orders",
-    "buyOrders": "Buy Orders",
-    "orders": "Orders",
-    "price": "Price",
-    "nanj": "NANJ",
-    "btc": "BTC",
-    "doge": "DOGE",
-    "btc_orders": "BTC Orders",
-    "doge_orders": "DOGE Orders"
+  "Menu": {
+    "bitmex_order": "Bitmex Order",
+    "setting": "Setting"
+  },
+  "Setting": {
+    "title": "API Key設定",
+    "apiKey": "API Key",
+    "secretKey": "Secret Key"
+  },
+  "Order": {
+    "lossLimit": "Loss Cut Margin(USD)",
+    "profitLimit": "Returns Margin(USD)",
+    "price": "price",
+    "amount": "Amount",
+    "marketBuy": "Market Buy",
+    "marketSell": "Market Sell",
+    "limitBuy": "Limit Buy",
+    "limitSell": "Limit Sell"
   }
 }

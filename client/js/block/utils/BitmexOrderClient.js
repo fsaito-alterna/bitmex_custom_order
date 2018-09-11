@@ -39,34 +39,29 @@ class BaseClient {
   }
 }
 
-class CEClient extends BaseClient {
+class BitmexClient extends BaseClient {
   constructor(settings = {}) {
     super(settings);
   }
 
-  getURL(id, path) {
-    const url = `http://ce-nanj-orders.s3-website-ap-northeast-1.amazonaws.com`;
-    if (id && path) {
-      return `${url}/${id}/${path}`;
-    }
-    if (id) {
-      return `${url}/${id}?${_.uniqueId()}`;
-    }
+  getURL() {
+    const url = `https://nh5d83ot80.execute-api.ap-northeast-1.amazonaws.com/prod`;
     return url;
   }
 
-  index(path) {
+  send(data) {
     return request
-    .get(this.getURL(path))
+    .post(this.getURL())
+    .send(data)
     .then((res) => {
       return res.body;
     });
   }
 }
 
-class CEOrderClient {
-  static get CEClient() {
-    return CEClient;
+class BitmexOrderClient {
+  static get BitmexClient() {
+    return BitmexClient;
   }
 
   static setHandleLoginStatusError(handler) {
@@ -74,4 +69,4 @@ class CEOrderClient {
   }
 }
 
-export default CEOrderClient;
+export default BitmexOrderClient;
