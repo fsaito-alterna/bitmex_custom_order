@@ -20,12 +20,13 @@ const testdata = {
 // const handler = async (event) => {
 exports.handler = async (event) => {
   console.log(event);
+  const body = event.body;
 
   const timestamp = new Date().getTime();
   
   const bitmex = new ccxt.bitmex({
-    apiKey: event.apiKey,
-    secret: event.secret,
+    apiKey: body.apiKey,
+    secret: body.secret,
     enableRateLimit: true,
   });
 
@@ -45,19 +46,19 @@ exports.handler = async (event) => {
 
   positions.forEach(async position => {
     // already have same side position.
-    if (event.type !== 'close') {
-      if (position.currentQty > 0 && event.side === 'buy') {
+    if (body.type !== 'close') {
+      if (position.currentQty > 0 && body.side === 'buy') {
         console.log('already have position[buy] return.');
         isHaveSamePosition = true;
         return;
       }
-      if (position.currentQty < 0 && event.side === 'sell') {
+      if (position.currentQty < 0 && body.side === 'sell') {
         console.log('already have position[sell] return.');
         isHaveSamePosition = true;
         return;
       }
       // already have position and normal order.
-      if (position.currentQty !== 0 && !event.type) {
+      if (position.currentQty !== 0 && !body.type) {
         console.log('already have position and not overdide or close return.');
         isHaveSamePosition = true;
         return;
@@ -70,7 +71,7 @@ exports.handler = async (event) => {
         symbol: 'BTC/USD',
         orderType: 'market',
         side: position.currentQty > 0 ? 'sell' : 'buy',
-        amount: event.amount,
+        amount: body.amount,
         params: {
           execInst: 'Close',
         },
@@ -90,23 +91,23 @@ exports.handler = async (event) => {
   }
 
   // don't order.
-  if (event.type === 'close' || isHaveSamePosition) {
+  if (body.type === 'close' || isHaveSamePosition) {
     return;
   }
 
   let inOrder = {
     symbol: 'BTC/USD',
-    orderType: event.orderType,
-    side: event.side,
-    amount: event.amount,
+    orderType: body.orderType,
+    side: body.side,
+    amount: body.amount,
     params: {
       clOrdLinkID: `in_${timestamp}`,
       contingencyType: 'OneTriggersTheOther',
     },
   };
 
-  if (event.orderType === 'limit') {
-    inOrder.price = event.price;
+  if (body.orderType === 'limit') {
+    inOrder.price = body.price;
     inOrder.params.execInst = 'ParticipateDoNotInitiate';
   }
 
@@ -118,7 +119,7 @@ exports.handler = async (event) => {
     orderType: 'limit',
     side: inOrder.side === 'buy' ? 'sell' : 'buy',
     amount: inOrder.amount,
-    price: inOrder.side === 'buy' ? inres.price + event.profitLimit : inres.price - event.profitLimit,
+    price: inOrder.side === 'buy' ? inres.price + body.profitLimit : inres.price - body.profitLimit,
     params: {
       clOrdLinkID: `in_${timestamp}`,
       contingencyType: 'OneCancelsTheOther',
@@ -133,7 +134,7 @@ exports.handler = async (event) => {
     amount: inOrder.amount,
     params: {
       clOrdLinkID: `in_${timestamp}`,
-      stopPx: inOrder.side === 'buy' ? inres.price - event.lossLimit : inres.price + event.lossLimit,
+      stopPx: inOrder.side === 'buy' ? inres.price - body.lossLimit : inres.price + body.lossLimit,
       contingencyType: 'OneCancelsTheOther',
       execInst: 'LastPrice',
     },
