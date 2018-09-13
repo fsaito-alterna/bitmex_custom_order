@@ -68,6 +68,8 @@ exports.handler = async (event) => {
     //console.log(open_orders);
   
     open_orders.forEach(async order => {
+      console.log('cancel order');
+      console.log(order);
       const cancel = await bitmex.cancel_order(order.id);
     });
   }
@@ -112,7 +114,7 @@ exports.handler = async (event) => {
     orderType: 'limit',
     side: inOrder.side === 'buy' ? 'sell' : 'buy',
     amount: inOrder.amount,
-    price: inOrder.side === 'buy' ? inres.price + body.profitLimit : inres.price - body.profitLimit,
+    price: inOrder.side === 'buy' ? inres.price + parseFloat(body.profitLimit) : inres.price - parseFloat(body.profitLimit),
     params: {
       clOrdLinkID: `in_${timestamp}`,
       contingencyType: 'OneCancelsTheOther',
@@ -127,7 +129,7 @@ exports.handler = async (event) => {
     amount: inOrder.amount,
     params: {
       clOrdLinkID: `in_${timestamp}`,
-      stopPx: inOrder.side === 'buy' ? inres.price - body.lossLimit : inres.price + body.lossLimit,
+      stopPx: inOrder.side === 'buy' ? inres.price - parseFloat(body.lossLimit) : inres.price + parseFloat(body.lossLimit),
       contingencyType: 'OneCancelsTheOther',
       execInst: 'LastPrice',
     },
