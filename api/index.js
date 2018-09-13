@@ -4,17 +4,19 @@ const ccxt = require('ccxt');
 const BitmexClient = require('./lib/bitmex_client');
 
 const testdata = {
-  apiKey: '',
-  secret: '',
-  price: 6436.0,
-  amount: 1,
-  side: 'buy',
-  orderType: 'market', // limit, market, traillimit,
-  lossLimit: 5,
-  profitLimit: 10,
-  trailLimit: 3, 
-  type: 'override', // override, close
   stage: 'test',
+  body: {
+    apiKey: '',
+    secret: '',
+    price: null,
+    amount: 1,
+    side: 'buy', // buy, sell, buy_close, sell_close
+    orderType: 'limit', // limit, market, traillimit,
+    lossLimit: 5,
+    profitLimit: 10,
+    trailLimit: 3, 
+    type: 'override', // override
+  }
 };
 
 // const handler = async (event) => {
@@ -42,31 +44,11 @@ exports.handler = async (event) => {
   //avgEntryPrice: 平均購入価格
   //console.log(positions);
 
-  let isHaveSamePosition = false;
-
+  let execClose = false;
   positions.forEach(async position => {
-    // already have same side position.
-    if (body.type !== 'close') {
-      if (position.currentQty > 0 && body.side === 'buy') {
-        console.log('already have position[buy] return.');
-        isHaveSamePosition = true;
-        return;
-      }
-      if (position.currentQty < 0 && body.side === 'sell') {
-        console.log('already have position[sell] return.');
-        isHaveSamePosition = true;
-        return;
-      }
-      // already have position and normal order.
-      if (position.currentQty !== 0 && !body.type) {
-        console.log('already have position and not overdide or close return.');
-        isHaveSamePosition = true;
-        return;
-      }
-    }
-
     // override or close.
-    if (position.currentQty !== 0) {
+    if (checkExecClose(position, body)) {
+      execClose = true;
       let closeOrder = {
         symbol: 'BTC/USD',
         orderType: 'market',
@@ -81,7 +63,7 @@ exports.handler = async (event) => {
   });
 
   //注文の取得
-  if (!isHaveSamePosition) {
+  if (execClose) {
     const open_orders = await bitmex.fetch_open_orders();
     //console.log(open_orders);
   
@@ -91,7 +73,8 @@ exports.handler = async (event) => {
   }
 
   // don't order.
-  if (body.type === 'close' || isHaveSamePosition) {
+  if (body.side === 'buy_close' || body.side === 'sell_close' || !execClose) {
+    console.log('end close.');
     return;
   }
 
@@ -107,7 +90,17 @@ exports.handler = async (event) => {
   };
 
   if (body.orderType === 'limit') {
-    inOrder.price = body.price;
+    if (body.price) {
+      inOrder.price = body.price;
+    } else {
+      //get order book
+      const orderbook = await bitmex.fetch_order_book('BTC/USD');
+      if (body.side === 'buy') {
+        inOrder.price = orderbook['bids'][0][0];
+      } else if (body.side === 'sell') {
+        inOrder.price = orderbook['asks'][0][0];
+      }
+    }
     inOrder.params.execInst = 'ParticipateDoNotInitiate';
   }
 
@@ -143,4 +136,19 @@ exports.handler = async (event) => {
   const outres = await BitmexClient.createOutOrder(bitmex, outProfitOrder, outLossOrder);
 };
 
-//handler(testdata);
+function checkExecClose(position, body) {
+  // already have same side position.
+  if (position.currentQty > 0 && (body.side === 'buy' || body.side === 'sell_close')) {
+    console.log('already have position[buy] return.');
+    return false;
+  } else if (position.currentQty < 0 && (body.side === 'sell' || body.side === 'buy_close')) {
+    console.log('already have position[sell] return.');
+    return false;
+  } else if (position.currentQty !== 0 && body.type !== 'override') {
+    console.log('already have position and not overdide or close return.');
+    return false;
+  }
+  return true;
+}
+
+// handler(testdata);
