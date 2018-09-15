@@ -83,7 +83,6 @@ exports.handler = async (event) => {
       const result = await bitmex.createOrder(closeOrder.symbol, closeOrder.orderType, closeOrder.side, closeOrder.amount, null, closeOrder.params);
       // limit close.
     }
-    console.log((body.side === 'buy_close' || body.side === 'sell_close') && !isReversePositionClose(position, body));
     if (((body.side === 'buy_close') || (body.side === 'sell_close')) && !isReversePositionClose(position, body)) {
       let limitCloseOrder = {
         symbol: 'BTC/USD',
@@ -96,7 +95,9 @@ exports.handler = async (event) => {
         },
       };
       //get order book
+      console.log('limit close, get orderbook');
       const orderbook = await bitmex.fetch_order_book('BTC/USD');
+      console.log(orderbook);
       if (body.side === 'buy_close') {
         limitCloseOrder.price = orderbook['asks'][0][0];
       } else if (body.side === 'sell_close') {
