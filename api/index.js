@@ -10,8 +10,8 @@ const testdata = {
     secret: '',
     price: null,
     amount: 1,
-    side: 'buy', // buy, sell, buy_close, sell_close
-    orderType: 'limit', // limit, market, traillimit,
+    side: 'sell_close', // buy, sell, buy_close, sell_close
+    orderType: 'market', // limit, market, traillimit,
     lossLimit: 5,
     profitLimit: 10,
     trailLimit: 3, 
@@ -44,11 +44,16 @@ exports.handler = async (event) => {
   //avgEntryPrice: 平均購入価格
   //console.log(positions);
 
-  let execClose = false;
+  let isOverride = false;
+  let isSamePosition = false;
+  
   positions.forEach(async position => {
+    if (isSamePositionEntry(position, body)) {
+      isSamePosition = true;
+    }
     // override or close.
-    if (checkExecClose(position, body)) {
-      execClose = true;
+    if (isOverridePosition(position, body)) {
+      isOverride = true;
       let closeOrder = {
         symbol: 'BTC/USD',
         orderType: 'market',
@@ -59,11 +64,33 @@ exports.handler = async (event) => {
         },
       };
       const result = await bitmex.createOrder(closeOrder.symbol, closeOrder.orderType, closeOrder.side, closeOrder.amount, null, closeOrder.params);
+      // limit close.
+    }
+    if ((body.side === 'buy_close' || body.side === 'sell_close') && !isReversePositionClose(position, body)) {
+      let limitCloseOrder = {
+        symbol: 'BTC/USD',
+        orderType: 'limit',
+        side: position.currentQty > 0 ? 'sell' : 'buy',
+        amount: body.amount,
+        price: null,
+        params: {
+          execInst: 'ReduceOnly',
+        },
+      };
+      //get order book
+      const orderbook = await bitmex.fetch_order_book('BTC/USD');
+      if (body.side === 'buy_close') {
+        limitCloseOrder.price = orderbook['asks'][0][0];
+      } else if (body.side === 'sell_close') {
+        limitCloseOrder.price = orderbook['bids'][0][0];
+      }
+      const res = await BitmexClient.createInOrder(bitmex,  limitCloseOrder);
+      console.log(res);
     }
   });
 
   //注文の取得
-  if (execClose) {
+  if (isOverride) {
     const open_orders = await bitmex.fetch_open_orders();
     //console.log(open_orders);
   
@@ -75,8 +102,8 @@ exports.handler = async (event) => {
   }
 
   // don't order.
-  if (body.side === 'buy_close' || body.side === 'sell_close' || !execClose) {
-    console.log('end close.');
+  if (body.side === 'buy_close' || body.side === 'sell_close' || isSamePosition || !isOverride) {
+    console.log('end.');
     return;
   }
 
@@ -131,7 +158,7 @@ exports.handler = async (event) => {
       clOrdLinkID: `in_${timestamp}`,
       stopPx: inOrder.side === 'buy' ? inres.price - parseFloat(body.lossLimit) : inres.price + parseFloat(body.lossLimit),
       contingencyType: 'OneCancelsTheOther',
-      execInst: 'LastPrice',
+      execInst: 'LastPrice,ReduceOnly',
     },
   }
 
@@ -151,6 +178,31 @@ function checkExecClose(position, body) {
     return false;
   }
   return true;
+}
+
+function isSamePositionEntry(position, body) {
+  if (position.currentQty > 0 && body.side === 'buy') {
+    return true;
+  } else if (position.currentQty < 0 && body.side === 'sell') {
+    return true;
+  }
+  return false;
+}
+
+function isReversePositionClose(position, body) {
+  if (position.currentQty < 0 && body.side === 'buy_close') {
+    return true;
+  } else if (position.currentQty > 0 && body.side === 'sell_close') {
+    return true;
+  }
+  return false;
+}
+
+function isOverridePosition(position, body) {
+  if ((body.side === 'buy' || body.side === 'sell') &&
+      !isSamePositionEntry(position, body) && body.type === 'override') {
+    return true;
+  }
 }
 
 // handler(testdata);
