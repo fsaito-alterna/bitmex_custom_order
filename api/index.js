@@ -96,7 +96,7 @@ exports.handler = async (event) => {
       };
       //get order book
       console.log('limit close, get orderbook');
-      const orderbook = bitmex.fetch_order_book('BTC/USD');
+      const orderbook = await bitmex.fetch_order_book('BTC/USD');
       console.log(orderbook);
       if (body.side === 'buy_close') {
         limitCloseOrder.price = orderbook['asks'][0][0];
