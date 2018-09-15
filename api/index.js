@@ -52,6 +52,22 @@ exports.handler = async (event) => {
     if (isSamePositionEntry(position, body)) {
       isSamePosition = true;
     }
+
+    if (position.currentQty === 0) {
+      isOverride = true;
+      let closeOrder = {
+        symbol: 'BTC/USD',
+        orderType: 'market',
+        side: position.openingQty > 0 ? 'sell' : 'buy',
+        amount: body.amount,
+        params: {
+          execInst: 'Close',
+        },
+      };
+      const result = await bitmex.createOrder(closeOrder.symbol, closeOrder.orderType, closeOrder.side, closeOrder.amount, null, closeOrder.params);
+      // limit close.
+    }
+
     // override or close.
     if (isOverridePosition(position, body)) {
       isOverride = true;
@@ -67,8 +83,8 @@ exports.handler = async (event) => {
       const result = await bitmex.createOrder(closeOrder.symbol, closeOrder.orderType, closeOrder.side, closeOrder.amount, null, closeOrder.params);
       // limit close.
     }
-    console.log(isReversePositionClose(position, body));
-    if ((body.side === 'buy_close' || body.side === 'sell_close') && !isReversePositionClose(position, body)) {
+    console.log((body.side === 'buy_close' || body.side === 'sell_close') && !isReversePositionClose(position, body));
+    if (((body.side === 'buy_close') || (body.side === 'sell_close')) && !isReversePositionClose(position, body)) {
       let limitCloseOrder = {
         symbol: 'BTC/USD',
         orderType: 'limit',
