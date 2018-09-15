@@ -48,6 +48,7 @@ exports.handler = async (event) => {
   let isSamePosition = false;
   
   positions.forEach(async position => {
+    console.log(position);
     if (isSamePositionEntry(position, body)) {
       isSamePosition = true;
     }
@@ -66,6 +67,7 @@ exports.handler = async (event) => {
       const result = await bitmex.createOrder(closeOrder.symbol, closeOrder.orderType, closeOrder.side, closeOrder.amount, null, closeOrder.params);
       // limit close.
     }
+    console.log(isReversePositionClose(position, body));
     if ((body.side === 'buy_close' || body.side === 'sell_close') && !isReversePositionClose(position, body)) {
       let limitCloseOrder = {
         symbol: 'BTC/USD',
