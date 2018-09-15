@@ -30,6 +30,7 @@ exports.handler = async (event) => {
     apiKey: body.apiKey,
     secret: body.secret,
     enableRateLimit: true,
+    timeout: 30000,
   });
 
   if (event.stage === 'test') {
