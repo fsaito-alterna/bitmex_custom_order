@@ -46,6 +46,10 @@ exports.handler = async (event) => {
 
   let isOverride = false;
   let isSamePosition = false;
+
+  if (positions === null || positions.length === 0) {
+    isOverride = true;
+  }
   
   await (async () => {
     for(let i = 0; i < positions.length; i++) {
