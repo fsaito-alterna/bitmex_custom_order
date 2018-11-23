@@ -10,7 +10,7 @@ const testdata = {
     secret: '',
     price: null,
     amount: 20,
-    side: 'buy_close', // buy, sell, buy_close, sell_close
+    side: 'sell', // buy, sell, buy_close, sell_close
     orderType: 'market', // limit, market, traillimit,
     lossLimit: 5,
     profitLimit: 10,
@@ -19,7 +19,7 @@ const testdata = {
   }
 };
 
-// const handler = async (event) => {
+ //const handler = async (event) => {
 exports.handler = async (event) => {
   console.log(event);
   const body = event.body;
@@ -141,10 +141,6 @@ exports.handler = async (event) => {
     orderType: body.orderType,
     side: body.side,
     amount: body.amount,
-    params: {
-      clOrdLinkID: `in_${timestamp}`,
-      contingencyType: 'OneTriggersTheOther',
-    },
   };
 
   if (body.orderType === 'limit') {
@@ -172,8 +168,6 @@ exports.handler = async (event) => {
     amount: inOrder.amount,
     price: inOrder.side === 'buy' ? inres.price + parseFloat(body.profitLimit) : inres.price - parseFloat(body.profitLimit),
     params: {
-      clOrdLinkID: `in_${timestamp}`,
-      contingencyType: 'OneCancelsTheOther',
       execInst: 'ReduceOnly',
     },
   }
@@ -184,9 +178,7 @@ exports.handler = async (event) => {
     side: inOrder.side === 'buy' ? 'sell' : 'buy',
     amount: inOrder.amount,
     params: {
-      clOrdLinkID: `in_${timestamp}`,
       stopPx: inOrder.side === 'buy' ? inres.price - parseFloat(body.lossLimit) : inres.price + parseFloat(body.lossLimit),
-      contingencyType: 'OneCancelsTheOther',
       execInst: 'LastPrice,ReduceOnly',
     },
   }
